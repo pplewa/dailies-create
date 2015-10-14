@@ -1,0 +1,23 @@
+{
+  "name": "dailies-create",
+  "version": "0.0.1",
+  "description": "Create Daily Note",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/pplewa/dailies-create.git"
+  },
+  "keywords": [
+    "Evernote",
+    "Dailies"
+  ],
+  "author": "plewus@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pplewa/dailies-create/issues"
+  },
+  "homepage": "https://github.com/pplewa/dailies-create#readme"
+}
