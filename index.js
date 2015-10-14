@@ -15,8 +15,8 @@ var DAYS_AGO = 1;
 Handlebars.registerHelper('mins', function(value) {
 	return Math.round(value/60);
 });
-Handlebars.registerHelper('config', function(val1, val2) {
-	return config[val1][val2];
+Handlebars.registerHelper('googleKey', function(val1, val2) {
+	return process.env.GOOGLE_KEY;
 });
 Handlebars.registerHelper('upperCase', function(value) {
 	return value.toLowerCase().replace(/\b[a-z]/g, function(letter) {
@@ -115,7 +115,7 @@ function getMemories() {
 
 function getMappiness() {
 	var deferred = Q.defer();
-	request({ url: config.mappiness.url, json: true }, function (error, response, data) {
+	request({ url: process.env.MAPPINESS_URL, json: true }, function (error, response, data) {
 		if (error) {
 			deferred.reject(new Error(error));
 		} else {
