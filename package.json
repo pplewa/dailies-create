@@ -19,5 +19,16 @@
   "bugs": {
     "url": "https://github.com/pplewa/dailies-create/issues"
   },
-  "homepage": "https://github.com/pplewa/dailies-create#readme"
+  "homepage": "https://github.com/pplewa/dailies-create#readme",
+  "dependencies": {
+    "evernote": "^1.25.3",
+    "fitbit-node": "^0.1.0",
+    "handlebars": "^2.0.0",
+    "html2enml2": "^0.2.0",
+    "moment": "^2.8.4",
+    "moves-api": "0.0.4",
+    "polyline-encoded": "0.0.5",
+    "q": "^1.1.2",
+    "request": "^2.51.0"
+  }
 }

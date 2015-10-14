@@ -1,0 +1,159 @@
+<div style="display: table; width: 100%; background: #F0F0F0; font: 14px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;">
+	<div style="display: table-row;">
+	<div style="padding: 5px; display: table-cell">
+
+		<table style="width: 100%; min-width: 100%; max-width: 100%; border: 2px #DB931F solid;" cellpadding="0" cellspacing="0" border="0">
+			<thead>
+				<tr><td style="padding: 5px 10px; background: #DB931F; color: #fff;">Diary</td></tr>
+			</thead>
+			<tbody>
+				<tr><td style="padding: 10px; background: #fff; font: 18px/29px 'Noteworthy', Times, serif;">Daily notes...</td></tr>
+				<tr><td style="padding: 10px; background: #fff; font: 18px/29px 'Noteworthy', Times, serif;">Story of the day: </td></tr>
+			</tbody>
+		</table>
+
+	</div>
+	</div>
+	<div style="display: table-row;">
+	<div style="padding: 5px; display: table-cell">
+
+		<table style="width: 100%; min-width: 100%; max-width: 100%; border: 2px #3A71B0 solid;" cellpadding="0" cellspacing="0" border="0">
+			<thead>
+				<tr>
+					<td style="padding: 5px 10px; background: #3A71B0; color: #fff;">Todos</td>
+					<td style="padding: 5px 10px; background: #3A71B0; color: #fff;">Mappiness</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="padding: 10px; background: #fff; border-right: 1px #3A71B0 solid;"><en-todo/> Todo</td>
+					<td style="padding: 10px; background: #fff; border-left: 1px #3A71B0 solid;">
+						{{#each mappiness}}<div><strong>{{name}}</strong> {{value}}</div>{{/each}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	</div>
+	<div style="display: table-row;">
+	<div style="padding: 5px 5px 0; display: table-cell">
+
+		<table style="width: 100%; min-width: 100%; max-width: 100%; border: 2px #8B572A solid;" cellpadding="0" cellspacing="0" border="0">
+			<thead>
+				<tr>
+					<td style="padding: 5px 10px; background: #8B572A; color: #fff;">Stats</td>
+					<td style="padding: 5px 10px; background: #8B572A; color: #fff;">Place</td>
+					<td style="padding: 5px 10px; background: #8B572A; color: #fff;">Map</td>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each storyline.segments}}
+				<tr>
+					<td style="padding: 10px; background: #fff; border-bottom: 1px #8B572A solid; border-right: 1px #8B572A solid;">
+						{{#if start}}<div><strong>Start:</strong> {{start}}</div>{{/if}}
+						{{#if end}}<div><strong>End:</strong> {{end}}</div>{{/if}}
+						{{#if activity}}<div><strong>Activity:</strong> {{activity}}</div>{{/if}}
+						{{#if duration}}<div><strong>Duration:</strong> {{mins duration}} min</div>{{/if}}
+						{{#if distance}}<div><strong>Distance:</strong> {{distance}} m</div>{{/if}}
+						{{#if steps}}<div><strong>Steps:</strong> {{steps}}</div>{{/if}}
+						{{#if calories}}<div><strong>Calories:</strong> {{calories}}</div>{{/if}}
+					</td>
+					<td style="padding: 10px; background: #fff; border-bottom: 1px #8B572A solid; border-right: 1px #8B572A solid; border-left: 1px #8B572A solid;">
+						{{#if place.foursquareId}}<a href="https://foursquare.com/v/x/{{place.foursquareId}}">{{/if}}{{#if place.name}}{{place.name}}{{else}}<em>{{activity}}</em>{{/if}}{{#if place.foursquareId}}</a>{{/if}}
+					</td>
+					<td style="padding: 10px; background: #fff; min-width: 127px; max-width: 127px; width: 127px; border-bottom: 1px #8B572A solid; border-left: 1px #8B572A solid;">
+						{{#if place.lat}}
+							<a href="http://www.google.com/maps?q={{place.lat}},{{place.lon}}">
+								<img width="125" height="125" style="border: 1px #ccc solid; float: left;" src="http://maps.googleapis.com/maps/api/staticmap?sensor=false&zoom=17&size=125x125&scale=1&center={{place.lat}},{{place.lon}}&markers={{place.lat}},{{place.lon}}&key={{config "google" "key"}}" />
+							</a>
+						{{else}}
+							<a href="http://maps.googleapis.com/maps/api/staticmap?size=125x125&path=color:0xff0000ff|weight:3|{{route.path}}&markers=label:S%7C{{route.start.lat}},{{route.start.lon}}&markers=label:F%7C{{route.finish.lat}},{{route.finish.lon}}&key={{config "google" "key"}}">
+								<img width="125" height="125" style="border: 1px #ccc solid; float: left;" src="http://maps.googleapis.com/maps/api/staticmap?size=125x125&path=color:0xff0000ff|weight:3|{{route.path}}&markers=label:S%7C{{route.start.lat}},{{route.start.lon}}&markers=label:F%7C{{route.finish.lat}},{{route.finish.lon}}&key={{config "google" "key"}}" />
+							</a>
+						{{/if}}
+					</td>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+
+	</div>
+	</div>
+	<div style="display: table-row;">
+	<div style="padding: 0 5px 5px; display: table-cell">
+
+		<table style="width: 100%; min-width: 100%; max-width: 100%; border: 2px #8B572A solid;" cellpadding="0" cellspacing="0" border="0">
+			<tbody>
+				<tr>
+					<td style="padding: 10px; background: #fff; border-right: 1px #8B572A solid;">
+						{{#each storyline.summary}}
+							<div><strong>{{upperCase activity}}</strong></div>
+							<ul>
+								{{#if distance}}<li><strong>Distance:</strong> {{distance}} m</li>{{/if}}
+								{{#if duration}}<li><strong>Duration:</strong> {{mins duration}} min</li>{{/if}}
+								{{#if steps}}<li><strong>Steps:</strong> {{steps}}</li>{{/if}}
+								{{#if calories}}<li><strong>Calories:</strong> {{calories}}</li>{{/if}}
+							</ul>
+						{{/each}}
+						<div><strong>Fitbit</strong></div>
+						<ul>
+							<li><strong>Sleep:</strong>  {{fitbit.sleep}} hrs</li>
+							<li><strong>Weight:</strong>  {{fitbit.weight}} kg {{fitbit.fat}}% fat</li>
+							<li><strong>Steps:</strong>  {{fitbit.steps}}</li>
+						</ul>
+						<div><strong>Farts:</strong> 15</div>
+						<div><strong>Resting HR:</strong> 45</div>
+					</td>
+					<td style="padding: 10px; background: #fff; border-left: 1px #8B572A solid;">
+						{{#if storyline.mapPath}}
+						<a href="http://maps.googleapis.com/maps/api/staticmap?sensor=false&scale=1&size=600x600{{storyline.mapPath}}&key={{config "google" "key"}}">
+							<img width="600" height="600" style="border: 1px #ccc solid; float: left;" src="http://maps.googleapis.com/maps/api/staticmap?sensor=false&scale=1&size=600x600{{storyline.mapPath}}&key={{config "google" "key"}}" />
+						</a>
+						{{/if}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	</div>
+	<div style="display: table-row;">
+	<div style="padding: 5px; display: table-cell">
+
+		<table style="width: 100%; min-width: 100%; max-width: 100%; border: 2px #386604 solid;" cellpadding="0" cellspacing="0" border="0">
+			<thead>
+				<tr>
+					<td style="padding: 5px 10px; background: #386604; color: #fff;">Photos</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="padding: 10px 10px 7px; background: #fff;">photos</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	</div>
+	<div style="display: table-row;">
+	<div style="padding: 5px; display: table-cell">
+
+		<table style="width: 100%; min-width: 100%; max-width: 100%; border: 2px #480980 solid;" cellpadding="0" cellspacing="0" border="0">
+			<thead>
+				<tr>
+					<td style="padding: 5px 10px; background: #480980; color: #fff;">Memories</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="padding: 10px; background: #fff;">
+						{{#each memories}}<div><a href="{{link}}">{{title}}</a></div>{{/each}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+	</div>
+</div>
