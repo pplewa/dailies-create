@@ -11,8 +11,8 @@ var request = require('request');
 var Flickr = require('flickrapi');
 var interpolate = require('interpolate');
 
-var DAYS_AGO = 1;
-var TIMEZONE = 'Australia/Sydney';
+var DAYS_AGO = process.env.DAYS_AGO || 1;
+var TIMEZONE = process.env.TIMEZONE || 'Australia/Sydney';
 
 // Handlebars
 Handlebars.registerHelper('mins', function(value) {
@@ -331,7 +331,9 @@ function getPhotos() {
 
 	var deferred = Q.defer();
 	Flickr.authenticate(flickrOptions, function(error, flickr) {
-		var yesterday = moment().tz(TIMEZONE).subtract(DAYS_AGO, 'days').startOf('day').unix();
+		// var yesterday = moment().tz(TIMEZONE).subtract(DAYS_AGO, 'days').startOf('day').unix();
+		var yesterday = moment().tz(TIMEZONE).startOf('day')
+			.subtract(DAYS_AGO, 'days').add(10, 'hours').unix();
 		flickr.photos.search({
 			user_id: flickrOptions.user_id,
 			min_taken_date: yesterday,
