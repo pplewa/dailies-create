@@ -2,7 +2,7 @@ var Evernote = require('evernote').Evernote;
 var MovesApi = require('moves-api').MovesApi;
 var Fitbit = require('fitbit-node');
 var Handlebars = require('handlebars');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var fs = require('fs');
 var Q = require('q');
 var html2enml = require('html2enml2').convert;
@@ -12,6 +12,7 @@ var Flickr = require('flickrapi');
 var interpolate = require('interpolate');
 
 var DAYS_AGO = 1;
+var TIMEZONE = 'Australia/Sydney';
 
 // Handlebars
 Handlebars.registerHelper('mins', function(value) {
@@ -51,7 +52,7 @@ function makeNote(noteTitle, noteBody, parentNotebook) {
 	var deferred = Q.defer();
 
 	html2enml('<body>' + noteBody + '</body>', '', function(enml, res){
-		var yesterday = moment().subtract(DAYS_AGO, 'day').startOf('day');
+		var yesterday = moment().tz(TIMEZONE).subtract(DAYS_AGO, 'day').startOf('day');
 		var ourNote = new Evernote.Note({
 			title: noteTitle,
 			tagNames: ['Journal', yesterday.format('YYYY'), yesterday.format('MMMM'), yesterday.format('dddd')],
@@ -92,8 +93,8 @@ function getMemories() {
 	var deferred = Q.defer();
 	var filter = new Evernote.NoteFilter({
 		words: interpolate('notebook:journal any: intitle:{dateFormat1} intitle:{dateFormat2}*', {
-			dateFormat1: moment().subtract(DAYS_AGO, 'day').format('DD/MM/'),
-			dateFormat2: moment().subtract(DAYS_AGO, 'day').format('DDMM')
+			dateFormat1: moment().tz(TIMEZONE).subtract(DAYS_AGO, 'day').format('DD/MM/'),
+			dateFormat2: moment().tz(TIMEZONE).subtract(DAYS_AGO, 'day').format('DDMM')
 		}),
 		order: Evernote.NoteSortOrder.CREATED,
 		ascending: false
@@ -148,8 +149,8 @@ function getMappiness() {
 		if (error) {
 			deferred.reject(new Error(error));
 		} else {
-			var a=0, h=0, r=0, logs = 0, date = new Date();
-			var now = moment([date.getFullYear(), date.getMonth(), date.getDate()]);
+			var a=0, h=0, r=0, logs = 0;
+			var now = moment().tz(TIMEZONE).startOf('day');
 			for (var i = 0; i < 10; i++) {
 				var logDate = new Date(data[i].start_time_epoch*1000);
 				var diff = now.diff(moment([logDate.getFullYear(), logDate.getMonth(), logDate.getDate()]), 'days');
@@ -185,7 +186,7 @@ function getStoryline() {
 	console.log('getStoryline');
 
 	var deferred = Q.defer();
-	moves.getStoryline({ trackPoints: true, date: moment().subtract(DAYS_AGO, 'day') }, function(error, storylines) {
+	moves.getStoryline({ trackPoints: true, date: moment().tz(TIMEZONE).subtract(DAYS_AGO, 'day') }, function(error, storylines) {
 		if (error) {
 			deferred.reject(new Error(error));
 		} else {
@@ -302,7 +303,7 @@ function getFitbit() {
 	console.log('getFitbit');
 
 	var deferred = Q.defer();
-	var yesterday = moment().subtract(DAYS_AGO, 'day').format('YYYY-MM-DD');
+	var yesterday = moment().tz(TIMEZONE).subtract(DAYS_AGO, 'day').format('YYYY-MM-DD');
 	var weight = '/body/log/weight/date/' + yesterday + '.json';
 	var fat = '/body/log/fat/date/' + yesterday + '.json';
 	var sleep = '/sleep/date/' + yesterday + '.json';
@@ -330,7 +331,7 @@ function getPhotos() {
 
 	var deferred = Q.defer();
 	Flickr.authenticate(flickrOptions, function(error, flickr) {
-		var yesterday = moment().subtract(DAYS_AGO, 'days').startOf('day').unix();
+		var yesterday = moment().tz(TIMEZONE).subtract(DAYS_AGO, 'days').startOf('day').unix();
 		flickr.photos.search({
 			user_id: flickrOptions.user_id,
 			min_taken_date: yesterday,
@@ -356,7 +357,7 @@ function getPhotos() {
 Q.all([
 	getMemories(), getMappiness(), getStoryline(), getFitbit(), getPhotos()
 ]).spread(function(memories, mappiness, storyline, fitbit, photos){
-	var noteTitle = moment().subtract(DAYS_AGO, 'day').format('DD/MM/YYYY ddd');
+	var noteTitle = moment().tz(TIMEZONE).subtract(DAYS_AGO, 'day').format('DD/MM/YYYY ddd');
 	var noteBody = getTemplate({
 		memories: memories,
 		mappiness: mappiness,
