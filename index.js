@@ -8,6 +8,8 @@ var Q = require('q');
 var html2enml = require('html2enml2').convert;
 var polyUtil = require('polyline-encoded');
 var request = require('request');
+var Flickr = require('flickrapi');
+var interpolate = require('interpolate');
 
 var DAYS_AGO = 1;
 
@@ -30,6 +32,13 @@ var getTemplate = Handlebars.compile(template);
 var evernote = new Evernote.Client({ token: process.env.EVERNOTE_TOKEN, sandbox: false });
 var moves = new MovesApi({ accessToken: process.env.MOVES_TOKEN });
 var fitbit = new Fitbit(process.env.FITBIT_KEY, process.env.FITBIT_SECRET);
+var flickrOptions = {
+	api_key: process.env.FLICKR_API_KEY,
+	secret: process.env.FLICKR_SECRET,
+	user_id: process.env.FLICKR_USER_ID,
+	access_token: process.env.FLICKR_ACCESS_TOKEN,
+	access_token_secret: process.env.FLICKR_ACCESS_SECRET
+};
 
 var noteStore = evernote.getNoteStore();
 
@@ -42,8 +51,7 @@ function makeNote(noteTitle, noteBody, parentNotebook) {
 	var deferred = Q.defer();
 
 	html2enml('<body>' + noteBody + '</body>', '', function(enml, res){
-		var date = new Date();
-		var yesterday = moment([date.getFullYear(), date.getMonth(), date.getDate()]).subtract(DAYS_AGO, 'day');
+		var yesterday = moment().subtract(DAYS_AGO, 'day').startOf('day');
 		var ourNote = new Evernote.Note({
 			title: noteTitle,
 			tagNames: ['Journal', yesterday.format('YYYY'), yesterday.format('MMMM'), yesterday.format('dddd')],
@@ -73,10 +81,20 @@ function makeNote(noteTitle, noteBody, parentNotebook) {
 	return deferred.promise;
 }
 
+function getPhotoUrl(options, size) {
+	options.size = size || 'b';
+	return interpolate('https://farm{farm}.staticflickr.com/{server}/{id}_{secret}_{size}.jpg', options);
+}
+
 function getMemories() {
+	console.log('getMemories');
+
 	var deferred = Q.defer();
 	var filter = new Evernote.NoteFilter({
-		words: 'notebook:journal intitle:' + moment().subtract(DAYS_AGO, 'day').format('DD/MM/'),
+		words: interpolate('notebook:journal any: intitle:{dateFormat1} intitle:{dateFormat2}*', {
+			dateFormat1: moment().subtract(DAYS_AGO, 'day').format('DD/MM/'),
+			dateFormat2: moment().subtract(DAYS_AGO, 'day').format('DDMM')
+		}),
 		order: Evernote.NoteSortOrder.CREATED,
 		ascending: false
 	});
@@ -93,16 +111,25 @@ function getMemories() {
 			deferred.reject(new Error(error));
 		} else {
 			var memories = [];
+			var noteUrl = 'https://www.evernote.com/shard/{shardId}/nl/{userId}/{noteGuid}/';
 			data.notes.forEach(function(note){
 				memories.push({
-					link: 'evernote:///view/' + process.env.EVERNOTE_USER_ID + '/' + process.env.EVERNOTE_SHARD_ID + '/' + note.guid + '/' + note.guid + '/',
+					link: interpolate(noteUrl, {
+						shardId: process.env.EVERNOTE_SHARD_ID,
+						userId: process.env.EVERNOTE_USER_ID,
+						noteGuid: note.guid
+					}),
 					title: note.title
 				});
 			});
 			noteStore.findNotesMetadata(foodFilter, 0, 10, noteSpec, function(error, data){
 				data.notes.forEach(function(note){
 					memories.push({
-						link: 'evernote:///view/' + process.env.EVERNOTE_USER_ID + '/' + process.env.EVERNOTE_SHARD_ID + '/' + note.guid + '/' + note.guid + '/',
+						link: interpolate(noteUrl, {
+							shardId: process.env.EVERNOTE_SHARD_ID,
+							userId: process.env.EVERNOTE_USER_ID,
+							noteGuid: note.guid
+						}),
 						title: note.title
 					});
 				});
@@ -114,6 +141,8 @@ function getMemories() {
 }
 
 function getMappiness() {
+	console.log('getMappiness');
+
 	var deferred = Q.defer();
 	request({ url: process.env.MAPPINESS_URL, json: true }, function (error, response, data) {
 		if (error) {
@@ -153,6 +182,8 @@ function getMappiness() {
 
 
 function getStoryline() {
+	console.log('getStoryline');
+
 	var deferred = Q.defer();
 	moves.getStoryline({ trackPoints: true, date: moment().subtract(DAYS_AGO, 'day') }, function(error, storylines) {
 		if (error) {
@@ -268,6 +299,8 @@ function getStoryline() {
 }
 
 function getFitbit() {
+	console.log('getFitbit');
+
 	var deferred = Q.defer();
 	var yesterday = moment().subtract(DAYS_AGO, 'day').format('YYYY-MM-DD');
 	var weight = '/body/log/weight/date/' + yesterday + '.json';
@@ -292,17 +325,49 @@ function getFitbit() {
 	return deferred.promise;
 }
 
-Q.all([getMemories(), getMappiness(), getStoryline(), getFitbit()]).spread(function(memories, mappiness, storyline, fitbit){
+function getPhotos() {
+	console.log('getPhotos');
+
+	var deferred = Q.defer();
+	Flickr.authenticate(flickrOptions, function(error, flickr) {
+		var yesterday = moment().subtract(DAYS_AGO, 'days').startOf('day').unix();
+		flickr.photos.search({
+			user_id: flickrOptions.user_id,
+			min_taken_date: yesterday,
+			authenticated: true,
+			media: 'photos',
+			per_page: 500,
+			sort: 'date-taken-asc'
+		}, function(err, result) {
+			if (err) {
+				return deferred.reject(err);
+			}
+			var photos = result.photos.photo.map(function(photo){
+				return getPhotoUrl(photo);
+			});
+
+			deferred.resolve(photos);
+		});
+	});
+	return deferred.promise;
+}
+
+
+Q.all([
+	getMemories(), getMappiness(), getStoryline(), getFitbit(), getPhotos()
+]).spread(function(memories, mappiness, storyline, fitbit, photos){
 	var noteTitle = moment().subtract(DAYS_AGO, 'day').format('DD/MM/YYYY ddd');
 	var noteBody = getTemplate({
 		memories: memories,
 		mappiness: mappiness,
 		storyline: storyline,
-		fitbit: fitbit
+		fitbit: fitbit,
+		photos: photos
 	});
 
 	makeNote(noteTitle, noteBody).then(function(note){
 		console.log('ok');
+		process.exit(0);
 	});
 }).fail(function(){
 	console.log(arguments);

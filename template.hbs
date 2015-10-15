@@ -129,7 +129,11 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td style="padding: 10px 10px 7px; background: #fff;">photos</td>
+					<td style="padding: 10px 10px 7px; background: #fff;">
+						{{#each photos}}
+							<a href="{{this}}"><img style="border: 1px #ccc solid;" src="{{this}}" /></a>
+						{{/each}}
+					</td>
 				</tr>
 			</tbody>
 		</table>

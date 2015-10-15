@@ -21,10 +21,12 @@
   },
   "homepage": "https://github.com/pplewa/dailies-create#readme",
   "dependencies": {
-    "evernote": "^1.25.3",
+    "evernote": "git@github.com:pplewa/evernote-sdk-js.git#master",
     "fitbit-node": "^0.1.0",
+    "flickrapi": "^0.3.36",
     "handlebars": "^2.0.0",
     "html2enml2": "^0.2.0",
+    "interpolate": "^0.1.0",
     "moment": "^2.8.4",
     "moves-api": "0.0.4",
     "polyline-encoded": "0.0.5",
