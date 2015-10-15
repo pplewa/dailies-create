@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/pplewa/dailies-create#readme",
   "dependencies": {
-    "evernote": "https://github.com/pplewa/evernote-sdk-js.git",
+    "evernote": "git+https://github.com/pplewa/evernote-sdk-js.git",
     "fitbit-node": "^0.1.0",
     "flickrapi": "^0.3.36",
     "handlebars": "^2.0.0",
