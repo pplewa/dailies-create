@@ -18,7 +18,7 @@ exports.getMappiness = function() {
 		var now = moment().tz(config.TIMEZONE).startOf('day');
 		for (var i = 0; i < 1000; i++) {
 			var logDate = moment(new Date(data[i].start_time_epoch * 1000)).tz(config.TIMEZONE).startOf('day');
-			var diff = now.diff(moment([logDate.getFullYear(), logDate.getMonth(), logDate.getDate()]), 'days');
+			var diff = now.diff(logDate, 'days');
 			if (diff === config.DAYS_AGO) {
 				logs++;
 				a += data[i].awake;
