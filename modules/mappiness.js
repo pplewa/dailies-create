@@ -19,6 +19,7 @@ exports.getMappiness = function() {
 		for (var i = 0; i < 1000; i++) {
 			var logDate = new Date(data[i].start_time_epoch * 1000);
 			var diff = now.diff(moment([logDate.getFullYear(), logDate.getMonth(), logDate.getDate()]), 'days');
+			console.log(logDate, diff)
 			if (diff === config.DAYS_AGO) {
 				logs++;
 				a += data[i].awake;
