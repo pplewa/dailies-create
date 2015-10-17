@@ -23,11 +23,14 @@ exports.getPhotos = function() {
 	var deferred = Q.defer();
 	Flickr.authenticate(flickrOptions, function(error, flickr) {
 		// adding ~10 hours for the Flickr time difference
-		var yesterday = moment().tz(config.TIMEZONE).startOf('day')
+		var day = moment().tz(config.TIMEZONE).startOf('day')
 			.subtract(config.DAYS_AGO, 'days').add(10, 'hours').unix();
+		var dayAfter = moment().tz(config.TIMEZONE).startOf('day')
+			.subtract(Number(config.DAYS_AGO) - 1, 'days').add(10, 'hours').unix();
 		flickr.photos.search({
 			user_id: flickrOptions.user_id,
-			min_taken_date: yesterday,
+			min_taken_date: day,
+			max_taken_date: dayAfter,
 			authenticated: true,
 			media: 'photos',
 			per_page: 500,
