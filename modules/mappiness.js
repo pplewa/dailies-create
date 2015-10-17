@@ -19,14 +19,13 @@ exports.getMappiness = function() {
 		for (var i = 0; i < 1000; i++) {
 			var logDate = moment(new Date(data[i].start_time_epoch * 1000)).tz(config.TIMEZONE).startOf('day');
 			var diff = now.diff(logDate, 'days');
-			if (diff === config.DAYS_AGO) {
+			if (diff === Number(config.DAYS_AGO)) {
 				logs++;
 				a += data[i].awake;
 				h += data[i].happy;
 				r += data[i].relaxed;
 			}
 		}
-		console.log(logs, a, r, h);
 		function getVal(val) {
 			return +(val/logs).toFixed(3);
 		}
