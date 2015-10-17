@@ -1,4 +1,4 @@
-<div style="display: table; width: 100%; background: #F0F0F0; font: 14px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;">
+<div style="display: table; width: 100%; background: #fff; font: 14px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;">
 	<div style="display: table-row;">
 	<div style="padding: 5px; display: table-cell">
 
@@ -61,6 +61,9 @@
 					</td>
 					<td style="padding: 10px; background: #fff; border-bottom: 1px #8B572A solid; border-right: 1px #8B572A solid; border-left: 1px #8B572A solid;">
 						{{#if place.foursquareId}}<a href="https://foursquare.com/v/x/{{place.foursquareId}}">{{/if}}{{#if place.name}}{{place.name}}{{else}}<em>{{activity}}</em>{{/if}}{{#if place.foursquareId}}</a>{{/if}}
+						<ul>
+							<li>{{#if @first}}wake up @{{../../fitbit.sleep.wakeUp}}{{/if}}{{#if @last}}go sleep @{{../../fitbit.sleep.goSleep}}{{/if}}</li>
+						</ul>
 					</td>
 					<td style="padding: 10px; background: #fff; min-width: 127px; max-width: 127px; width: 127px; border-bottom: 1px #8B572A solid; border-left: 1px #8B572A solid;">
 						{{#if place.lat}}
@@ -98,12 +101,17 @@
 						{{/each}}
 						<div><strong>Fitbit</strong></div>
 						<ul>
-							<li><strong>Sleep:</strong>  {{fitbit.sleep}} hrs</li>
-							<li><strong>Weight:</strong>  {{fitbit.weight}} kg {{fitbit.fat}}% fat</li>
-							<li><strong>Steps:</strong>  {{fitbit.steps}}</li>
+							<li><strong>Sleep:</strong> {{fitbit.sleep.duration}} hrs</li>
+							<li><strong>Weight:</strong> {{fitbit.weight.weight}} kg</li>
+							<li><strong>Fat:</strong> {{round fitbit.weight.fat}}%</li>
+							<li><strong>BMI:</strong> {{fitbit.weight.bmi}}</li>
+							<li><strong>Steps:</strong> {{fitbit.activities.steps}}</li>
+							<li><strong>Sedentary:</strong> {{fitbit.activities.sedentaryMinutes}} mins</li>
+							<li><strong>Active+:</strong> {{fitbit.activities.veryActiveMinutes}} mins</li>
+							<li><strong>Floors:</strong> {{fitbit.activities.floors}}</li>
+							<li><strong>Resting HR:</strong> {{fitbit.heart.restingHeartRate}}</li>
 						</ul>
 						<div><strong>Farts:</strong> 15</div>
-						<div><strong>Resting HR:</strong> 45</div>
 					</td>
 					<td style="padding: 10px; background: #fff; border-left: 1px #8B572A solid;">
 						{{#if storyline.mapPath}}

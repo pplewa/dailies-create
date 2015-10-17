@@ -22,7 +22,7 @@
   "homepage": "https://github.com/pplewa/dailies-create#readme",
   "dependencies": {
     "evernote": "git+https://github.com/pplewa/evernote-sdk-js.git",
-    "fitbit-node": "^0.1.0",
+    "fitbit-client-oauth2": "git+https://github.com/pplewa/fitbit-client-oauth2.git",
     "flickrapi": "^0.3.36",
     "handlebars": "^2.0.0",
     "html2enml2": "^0.2.0",
@@ -30,6 +30,7 @@
     "moment": "^2.8.4",
     "moment-timezone": "^0.4.1",
     "moves-api": "0.0.4",
+    "oauth": "^0.9.14",
     "polyline-encoded": "0.0.5",
     "q": "^1.1.2",
     "request": "^2.51.0"
