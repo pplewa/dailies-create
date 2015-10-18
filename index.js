@@ -30,7 +30,7 @@ var getTemplate = Handlebars.compile(template);
 
 
 Q.all([
-	getMemories(), getMappiness(), getStoryline(), getFitbitData(),
+	getMemories(), getMappiness(), getStoryline(), getFitbitData(), getPhotos()
 ]).spread(function(memories, mappiness, storyline, fitbit, photos){
 	var noteTitle = moment().tz(config.TIMEZONE)
 		.subtract(config.DAYS_AGO, 'day').format('DD/MM/YYYY ddd');
@@ -39,7 +39,7 @@ Q.all([
 		mappiness: mappiness,
 		storyline: storyline,
 		fitbit: fitbit,
-		photos: []
+		photos: photos
 	});
 
 	createNote(noteTitle, noteBody).then(function(note){
