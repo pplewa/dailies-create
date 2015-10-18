@@ -114,10 +114,8 @@
 						<div><strong>Farts:</strong> 15</div>
 					</td>
 					<td style="padding: 10px; background: #fff; border-left: 1px #8B572A solid;">
-						{{#if storyline.mapPath}}
-						<a href="http://maps.googleapis.com/maps/api/staticmap?sensor=false&scale=1&size=600x600{{storyline.mapPath}}&key={{googleKey}}">
-							<img width="600" height="600" style="border: 1px #ccc solid; float: left;" src="http://maps.googleapis.com/maps/api/staticmap?sensor=false&scale=1&size=600x600{{storyline.mapPath}}&key={{googleKey}}" />
-						</a>
+						{{#if storyline.mapURL}}
+							<img width="600" height="600" style="border: 1px #ccc solid; float: left;" src="{{storyline.mapURL}}" />
 						{{/if}}
 					</td>
 				</tr>

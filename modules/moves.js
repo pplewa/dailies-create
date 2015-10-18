@@ -2,6 +2,8 @@ var MovesApi = require('moves-api').MovesApi;
 var Q = require('q');
 var moment = require('moment-timezone');
 var polyUtil = require('polyline-encoded');
+var dailiesMap = require('dailies-map');
+var fs = require('fs');
 var config = require('../config');
 
 var moves = new MovesApi({ accessToken: process.env.MOVES_TOKEN });
@@ -20,40 +22,9 @@ exports.getStoryline = function() {
 
 		var storyline = {
 			summary: storylines[0].summary,
-			mapPath: '',
+			mapURL: '',
 			segments: []
 		};
-
-		var paths = [];
-		var activities = [];
-		var previousActivity = '';
-		storylines[0].segments.forEach(function(segment) {
-			// Add movements if we got an activities segment
-			if(segment.type == 'move' && Array.isArray(segment.activities)) {
-				segment.activities.forEach(function(activity) {
-					if (activity.activity === previousActivity) {
-						activity.trackPoints.forEach(function(point, i) {
-							paths[paths.length-1].push([point.lat, point.lon]);
-						});
-					} else {
-						previousActivity = activity.activity === 'walking' ? 'walking' : 'move';
-						var _temp = [];
-						activity.trackPoints.forEach(function(point, i) {
-							_temp.push([point.lat, point.lon]);
-						});
-						paths[paths.length] = _temp;
-						activities[paths.length] = previousActivity;
-					}
-				});
-			}
-		});
-
-		var urlPath = ''
-		paths.forEach(function(path, i){
-			var style = activities[i] === 'walking' ? 'color:black|' : 'color:green|';
-			urlPath += '&path='+style+'enc:' + encodeURIComponent(polyUtil.encode(path));
-		});
-		storyline.mapPath = urlPath;
 
 		storylines[0].segments.forEach(function(segment, i){
 			if (segment.place) {
@@ -119,7 +90,13 @@ exports.getStoryline = function() {
 					storyline.segments.push(temp);
 				});
 			}
+		});
 
+		dailiesMap.convertToMap(storylines).then(function(map){
+			// fs.readFile(map, 'binary', function(err, original_data){
+			    // storyline.mapURL = new Buffer(original_data, 'binary').toString('base64');
+			// });
+			storyline.mapURL = map;
 			deferred.resolve(storyline);
 		});
 	});

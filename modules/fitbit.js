@@ -53,7 +53,7 @@ exports.getFitbitData = function() {
 			var sleepObj = {};
 			try {
 				sleepObj = {
-					goSleep: moment(sleepAfter.sleep[0].startTime).format('H:mm'),
+					goSleep: sleepAfter && sleepAfter.sleep[0] ? moment(sleepAfter.sleep[0].startTime).format('H:mm') : '',
 					wakeUp: moment(sleep.sleep[0].startTime).add(sleep.sleep[0].timeInBed, 'minutes').format('H:mm'),
 					duration: moment.utc(sleep.summary.totalMinutesAsleep * 60 * 1000).format('H:mm')
 				}

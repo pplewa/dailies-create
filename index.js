@@ -28,8 +28,9 @@ Handlebars.registerHelper('upperCase', function(value) {
 var template = fs.readFileSync('template.hbs', { encoding: 'utf-8' });
 var getTemplate = Handlebars.compile(template);
 
+
 Q.all([
-	getMemories(), getMappiness(), getStoryline(), getFitbitData(), getPhotos()
+	getMemories(), getMappiness(), getStoryline(), getFitbitData(),
 ]).spread(function(memories, mappiness, storyline, fitbit, photos){
 	var noteTitle = moment().tz(config.TIMEZONE)
 		.subtract(config.DAYS_AGO, 'day').format('DD/MM/YYYY ddd');
@@ -38,7 +39,7 @@ Q.all([
 		mappiness: mappiness,
 		storyline: storyline,
 		fitbit: fitbit,
-		photos: photos
+		photos: []
 	});
 
 	createNote(noteTitle, noteBody).then(function(note){
