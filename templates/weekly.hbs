@@ -1,0 +1,57 @@
+<div style="color: #333333">
+	<h3 style="color: #205081; margin: 10px 0;">Roundups</h3>
+	<ul>
+		<li><strong>Atlassian:</strong> <a href="{{work.link}}">{{work.title}}</a></li>
+		<li><strong>Finances:</strong> <a href="{{finance.link}}">{{finance.title}}</a></li>
+		<li><strong>Fitbit:</strong> <a href="{{fitbit.link}}">{{fitbit.title}}</a></li>
+		<li>&#160;</li>
+	</ul>
+</div>
+<div>
+	<h3 style="color: #205081; margin: 10px 0;">Successes</h3>
+	<ul>
+		<li>&#160;</li>
+	</ul>
+</div>
+<div>
+	<h3 style="color: #205081; margin: 10px 0;">Failures</h3>
+	<ul>
+		<li>&#160;</li>
+	</ul>
+</div>
+<div>
+	<h3 style="color: #205081; margin: 10px 0;">Books</h3>
+	<ul>
+		{{#each books}}
+			<li><a href="{{link}}">{{title}}</a></li>
+		{{/each}}
+	</ul>
+</div>
+<div>
+	<h3 style="color: #205081; margin: 10px 0;">Podcasts</h3>
+	<ul>
+		{{#each podcasts}}
+			<li><a href="{{link}}">{{title}}</a></li>
+		{{/each}}
+	</ul>
+</div>
+<div>
+	<h3 style="color: #205081; margin: 10px 0;">Articles</h3>
+	<ul>
+		{{#each articles}}
+			<li><a href="{{link}}">{{title}}</a></li>
+		{{/each}}
+	</ul>
+</div>
+<div>
+	<h3 style="color: #205081; margin: 10px 0;">Videos</h3>
+	<ul>
+		{{#each videos}}
+			<li><a href="{{link}}">{{title}}</a></li>
+		{{/each}}
+	</ul>
+</div>
+<div>
+	<h3 style="color: #205081; margin: 10px 0;">Locations</h3>
+	<img width="1000" height="1000" style="border: 1px #ccc solid;" src="{{traces.mapURL}}" />
+</div>

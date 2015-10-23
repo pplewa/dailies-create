@@ -25,7 +25,7 @@ Handlebars.registerHelper('upperCase', function(value) {
 		return letter.toUpperCase();
 	}).replace('_', ' ');
 });
-var template = fs.readFileSync('template.hbs', { encoding: 'utf-8' });
+var template = fs.readFileSync('templates/daily.hbs', { encoding: 'utf-8' });
 var getTemplate = Handlebars.compile(template);
 
 
@@ -42,10 +42,12 @@ Q.all([
 		photos: photos
 	});
 
-	createNote(noteTitle, noteBody).then(function(note){
+	var yesterday = moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').startOf('day');
+	var tags = ['Journal', yesterday.format('YYYY'), yesterday.format('MMMM'), yesterday.format('dddd')];
+	createNote(noteTitle, noteBody, tags, yesterday.valueOf()).then(function(note){
 		console.log('ok');
 		process.exit(0);
 	});
-}).fail(function(error){
+}).catch(function(error){
 	console.log(error);
 });

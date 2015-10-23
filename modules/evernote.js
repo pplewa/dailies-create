@@ -8,23 +8,17 @@ var config = require('../config');
 var evernote = new Evernote.Client({ token: process.env.EVERNOTE_TOKEN, sandbox: false });
 var noteStore = evernote.getNoteStore();
 
-exports.createNote = function(noteTitle, noteBody, parentNotebook) {
+exports.createNote = function(noteTitle, noteBody, tags, created) {
 	var deferred = Q.defer();
 
 	html2enml('<body>' + noteBody + '</body>', '', function(enml, res){
-		var yesterday = moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').startOf('day');
 		var ourNote = new Evernote.Note({
 			title: noteTitle,
-			tagNames: ['Journal', yesterday.format('YYYY'), yesterday.format('MMMM'), yesterday.format('dddd')],
+			tagNames: tags || [],
 			content: enml,
-			created: yesterday.valueOf(),
+			created: created || null,
 			resources: res
 		});
-
-		// parentNotebook is optional; if omitted, default notebook is used
-		if (parentNotebook && parentNotebook.guid) {
-			ourNote.notebookGuid = parentNotebook.guid;
-		}
 
 		// Attempt to create note in Evernote account
 		noteStore.createNote(ourNote, function(error, note) {
@@ -39,6 +33,54 @@ exports.createNote = function(noteTitle, noteBody, parentNotebook) {
 			}
 		});
 	});
+	return deferred.promise;
+}
+
+exports.createEmptyNote = function(noteTitle, tags, created, notebookName) {
+	var deferred = Q.defer();
+	var note = new Evernote.Note({
+		title: noteTitle,
+		tagNames: tags || [],
+		created: created || null
+	});
+	if (notebookName) {
+		noteStore.listNotebooks(function(err, notebooks) {
+			if (err) {
+				return deferred.reject(new Error(err));
+			}
+			var notebookGuid = null;
+			notebooks.some(function(notebook){
+				if (notebook.name.toLowerCase() === notebookName.toLowerCase()) {
+					notebookGuid = notebook.guid;
+					return true;
+				}
+			});
+			if (notebookGuid) {
+				note.notebookGuid = notebookGuid;
+			}
+			noteStore.createNote(note, function(error, note) {
+				if (error) {
+					return deferred.reject(new Error(error));
+				} 
+				var noteUrl = 'evernote:///view/{userId}/{shardId}/{noteGuid}/{noteGuid}/';
+				deferred.resolve({
+					title: noteTitle,
+					link: interpolate(noteUrl, {
+						shardId: process.env.EVERNOTE_SHARD_ID,
+						userId: process.env.EVERNOTE_USER_ID,
+						noteGuid: note.guid
+					})
+				});
+			});
+		});
+	} else {
+		noteStore.createNote(note, function(error, note) {
+			if (error) {
+				return deferred.reject(new Error(error));
+			} 
+			deferred.resolve(note);
+		});
+	}
 	return deferred.promise;
 }
 
@@ -93,5 +135,88 @@ exports.getMemories = function() {
 			});
 		}
 	});
+	return deferred.promise;
+}
+
+function getNotesWithFilter(filter) {
+	var deferred = Q.defer();
+	var noteSpec = new Evernote.NotesMetadataResultSpec({
+		includeTitle: true
+	})
+	noteStore.findNotesMetadata(filter, 0, 50, noteSpec, function(error, data){
+		if (error) {
+			deferred.reject(new Error(error));
+		} else {
+			var memories = [];
+			var noteUrl = 'evernote:///view/{userId}/{shardId}/{noteGuid}/{noteGuid}/';
+			data.notes.forEach(function(note){
+				memories.push({
+					link: interpolate(noteUrl, {
+						shardId: process.env.EVERNOTE_SHARD_ID,
+						userId: process.env.EVERNOTE_USER_ID,
+						noteGuid: note.guid
+					}),
+					title: note.title
+				});
+			});
+			deferred.resolve(memories);
+		}
+	});
+	return deferred.promise;
+}
+
+exports.getBooks = function() {
+	console.log('getBooks');
+	var deferred = Q.defer();
+	getNotesWithFilter(new Evernote.NoteFilter({
+		words: interpolate('notebook:books created:{dateFrom} -created:{dateTo}', {
+			dateFrom: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').format('YYYYMMDD'),
+			dateTo: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+		}),
+		order: Evernote.NoteSortOrder.CREATED,
+		ascending: false
+	})).then(deferred.resolve).catch(deferred.reject);
+	return deferred.promise;
+}
+
+exports.getArticles = function() {
+	console.log('getArticles');
+	var deferred = Q.defer();
+	getNotesWithFilter(new Evernote.NoteFilter({
+		words: interpolate('notebook:pocket created:{dateFrom} -created:{dateTo}', {
+			dateFrom: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').format('YYYYMMDD'),
+			dateTo: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+		}),
+		order: Evernote.NoteSortOrder.CREATED,
+		ascending: false
+	})).then(deferred.resolve).catch(deferred.reject);
+	return deferred.promise;
+}
+
+exports.getVideos = function() {
+	console.log('getVideos');
+	var deferred = Q.defer();
+	getNotesWithFilter(new Evernote.NoteFilter({
+		words: interpolate('notebook:videos created:{dateFrom} -created:{dateTo}', {
+			dateFrom: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').format('YYYYMMDD'),
+			dateTo: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+		}),
+		order: Evernote.NoteSortOrder.CREATED,
+		ascending: false
+	})).then(deferred.resolve).catch(deferred.reject);
+	return deferred.promise;
+}
+
+exports.getPodcasts = function() {
+	console.log('getPodcasts');
+	var deferred = Q.defer();
+	getNotesWithFilter(new Evernote.NoteFilter({
+		words: interpolate('notebook:podcasts created:{dateFrom} -created:{dateTo}', {
+			dateFrom: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').format('YYYYMMDD'),
+			dateTo: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+		}),
+		order: Evernote.NoteSortOrder.CREATED,
+		ascending: false
+	})).then(deferred.resolve).catch(deferred.reject);
 	return deferred.promise;
 }

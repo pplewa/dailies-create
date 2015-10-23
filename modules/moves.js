@@ -86,19 +86,37 @@ exports.getStoryline = function() {
 						start: start,
 						finish: finish
 					};
-					// if (i >= 10)
 					storyline.segments.push(temp);
 				});
 			}
 		});
 
 		dailiesMap.convertToMap(storylines).then(function(map){
-			// fs.readFile(map, 'binary', function(err, original_data){
-			    // storyline.mapURL = new Buffer(original_data, 'binary').toString('base64');
-			// });
 			storyline.mapURL = map;
 			deferred.resolve(storyline);
 		});
+	});
+	return deferred.promise;
+}
+
+exports.getWeeklyStoryline = function() {
+	console.log('getWeeklyStoryline');
+
+	console.log('from', moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').toString());
+	console.log('to', moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').toString());
+
+	var deferred = Q.defer();
+	moves.getStoryline({ 
+		trackPoints: true, 
+		from: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day'),
+		to: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day')
+	}, function(error, storylines) {
+		if (error) {
+			return deferred.reject(error);
+		}
+		dailiesMap.convertToWeeklyMap(storylines).then(function(map){
+			deferred.resolve({ mapURL: map });
+		}).catch(deferred.reject);
 	});
 	return deferred.promise;
 }
