@@ -170,8 +170,8 @@ exports.getBooks = function() {
 	var deferred = Q.defer();
 	getNotesWithFilter(new Evernote.NoteFilter({
 		words: interpolate('notebook:books created:{dateFrom} -created:{dateTo}', {
-			dateFrom: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').format('YYYYMMDD'),
-			dateTo: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+			dateFrom: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) + 6, 'day').format('YYYYMMDD'),
+			dateTo: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) - 1, 'day').format('YYYYMMDD')
 		}),
 		order: Evernote.NoteSortOrder.CREATED,
 		ascending: false
@@ -184,8 +184,8 @@ exports.getArticles = function() {
 	var deferred = Q.defer();
 	getNotesWithFilter(new Evernote.NoteFilter({
 		words: interpolate('notebook:pocket created:{dateFrom} -created:{dateTo}', {
-			dateFrom: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').format('YYYYMMDD'),
-			dateTo: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+			dateFrom: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) + 6, 'day').format('YYYYMMDD'),
+			dateTo: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) - 1, 'day').format('YYYYMMDD')
 		}),
 		order: Evernote.NoteSortOrder.CREATED,
 		ascending: false
@@ -198,8 +198,8 @@ exports.getVideos = function() {
 	var deferred = Q.defer();
 	getNotesWithFilter(new Evernote.NoteFilter({
 		words: interpolate('notebook:videos created:{dateFrom} -created:{dateTo}', {
-			dateFrom: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').format('YYYYMMDD'),
-			dateTo: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+			dateFrom: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) + 6, 'day').format('YYYYMMDD'),
+			dateTo: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) - 1, 'day').format('YYYYMMDD')
 		}),
 		order: Evernote.NoteSortOrder.CREATED,
 		ascending: false
@@ -212,8 +212,8 @@ exports.getPodcasts = function() {
 	var deferred = Q.defer();
 	getNotesWithFilter(new Evernote.NoteFilter({
 		words: interpolate('notebook:podcasts created:{dateFrom} -created:{dateTo}', {
-			dateFrom: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').format('YYYYMMDD'),
-			dateTo: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+			dateFrom: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) + 6, 'day').format('YYYYMMDD'),
+			dateTo: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) - 1, 'day').format('YYYYMMDD')
 		}),
 		order: Evernote.NoteSortOrder.CREATED,
 		ascending: false

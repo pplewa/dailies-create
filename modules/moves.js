@@ -102,13 +102,13 @@ exports.getStoryline = function() {
 exports.getWeeklyStoryline = function() {
 	console.log('getWeeklyStoryline');
 
-	console.log('from', moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day').toString());
+	console.log('from', moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) + 6, 'day').toString());
 	console.log('to', moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').toString());
 
 	var deferred = Q.defer();
 	moves.getStoryline({ 
 		trackPoints: true, 
-		from: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO + 6, 'day'),
+		from: moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) + 6, 'day'),
 		to: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day')
 	}, function(error, storylines) {
 		if (error) {
