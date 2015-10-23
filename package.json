@@ -4,7 +4,8 @@
   "description": "Create Daily Note",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "weekly": "node weekly"
   },
   "repository": {
     "type": "git",
