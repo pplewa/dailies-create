@@ -8,6 +8,7 @@ var getMappiness = require('./modules/mappiness').getMappiness;
 var getPhotos = require('./modules/flickr').getPhotos;
 var getFitbitData = require('./modules/fitbit').getFitbitData;
 var getMemories = require('./modules/evernote').getMemories;
+var getNowNote = require('./modules/evernote').getNowNote;
 var createNote = require('./modules/evernote').createNote;
 
 // Handlebars
@@ -28,14 +29,15 @@ Handlebars.registerHelper('upperCase', function(value) {
 var template = fs.readFileSync('templates/daily.hbs', { encoding: 'utf-8' });
 var getTemplate = Handlebars.compile(template);
 
-
 Q.all([
-	getMemories(), getMappiness(), getStoryline(), getFitbitData(), getPhotos()
-]).spread(function(memories, mappiness, storyline, fitbit, photos){
+	getMemories(), getNowNote(), getMappiness(), getStoryline(), getFitbitData(), getPhotos()
+]).spread(function(memories, nowNote, mappiness, storyline, fitbit, photos){
 	var noteTitle = moment().tz(config.TIMEZONE)
 		.subtract(config.DAYS_AGO, 'day').format('DD/MM/YYYY ddd');
+	
 	var noteBody = getTemplate({
 		memories: memories,
+		nowNote: nowNote,
 		mappiness: mappiness,
 		storyline: storyline,
 		fitbit: fitbit,

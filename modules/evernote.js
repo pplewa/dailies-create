@@ -138,6 +138,29 @@ exports.getMemories = function() {
 	return deferred.promise;
 }
 
+exports.getNowNote = function() {
+	console.log('getNowNote');
+
+	var deferred = Q.defer();
+	var nowGuid = 'd709548b-d5bd-4863-81f8-22caa47cd799';
+	noteStore.getNote(nowGuid, true, false, false, false, function(error, data){
+		if (error) {
+			deferred.reject(new Error(error));
+		} else {
+			var now = data.content.match(/<ul>([\s\S]*?)<\/ul>/)[1].replace(/li>/g, 'div>');
+			var done = now.split('checked="true').length - 1; 
+			var todos = now.split('<en-todo').length - 1;
+
+			deferred.resolve({
+				content: now,
+				productivity: +(done/todos).toFixed(3) + ' ' + 
+					['😫', '😟', '😐', '😌', '😀'][Math.round(+(done/todos)*5)-1]
+			});
+		}
+	});
+	return deferred.promise;
+}
+
 function getNotesWithFilter(filter) {
 	var deferred = Q.defer();
 	var noteSpec = new Evernote.NotesMetadataResultSpec({

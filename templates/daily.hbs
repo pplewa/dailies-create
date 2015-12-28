@@ -26,9 +26,12 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td style="padding: 10px; background: #fff; border-right: 1px #3A71B0 solid;"><en-todo/> Todo</td>
+					<td style="padding: 10px; background: #fff; border-right: 1px #3A71B0 solid;">
+						{{#if nowNote}}{{{nowNote.content}}}{{/if}}
+					</td>
 					<td style="padding: 10px; background: #fff; border-left: 1px #3A71B0 solid;">
 						{{#each mappiness}}<div><strong>{{name}}</strong> {{value}}</div>{{/each}}
+						{{#if nowNote}}<div><strong>Productivity</strong> {{nowNote.productivity}}</div>{{/if}}
 					</td>
 				</tr>
 			</tbody>

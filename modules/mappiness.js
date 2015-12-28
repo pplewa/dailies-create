@@ -38,8 +38,7 @@ exports.getMappiness = function() {
 			{ name: 'Logs', 'value': logs },
 			{ name: 'Happy', 'value': getVal(h) + ' ' + getFace(h) },
 			{ name: 'Relax', 'value': getVal(r) + ' ' + getFace(r) },
-			{ name: 'Awake', 'value': getVal(a) + ' ' + getFace(a) },
-			{ name: 'Productivity', 'value': '0 😫😟😐😌😀' }
+			{ name: 'Awake', 'value': getVal(a) + ' ' + getFace(a) }
 		]);
 	});
 	return deferred.promise;
