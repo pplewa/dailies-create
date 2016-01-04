@@ -2,14 +2,14 @@ var Handlebars = require('handlebars');
 var moment = require('moment-timezone');
 var fs = require('fs');
 var Q = require('q');
-var config = require('./config');
-var getStoryline = require('./modules/moves').getStoryline;
-var getMappiness = require('./modules/mappiness').getMappiness;
-var getPhotos = require('./modules/flickr').getPhotos;
-var getFitbitData = require('./modules/fitbit').getFitbitData;
-var getMemories = require('./modules/evernote').getMemories;
-var getNowNote = require('./modules/evernote').getNowNote;
-var createNote = require('./modules/evernote').createNote;
+// var config = require('./config');
+// var getStoryline = require('./modules/moves').getStoryline;
+// var getPhotos = require('./modules/flickr').getPhotos;
+// var getFitbitData = require('./modules/fitbit').getFitbitData;
+// var getMemories = require('./modules/evernote').getMemories;
+// var getNowNote = require('./modules/evernote').getNowNote;
+// var createNote = require('./modules/evernote').createNote;
+var getReporter = require('./modules/reporter').getReporter;
 
 // Handlebars
 Handlebars.registerHelper('mins', function(value) {
@@ -30,15 +30,15 @@ var template = fs.readFileSync('templates/daily.hbs', { encoding: 'utf-8' });
 var getTemplate = Handlebars.compile(template);
 
 Q.all([
-	getMemories(), getNowNote(), getMappiness(), getStoryline(), getFitbitData(), getPhotos()
-]).spread(function(memories, nowNote, mappiness, storyline, fitbit, photos){
+	getMemories(), getNowNote(), getReporter(), getStoryline(), getFitbitData(), getPhotos()
+]).spread(function(memories, nowNote, reporter, storyline, fitbit, photos){
 	var noteTitle = moment().tz(config.TIMEZONE)
 		.subtract(config.DAYS_AGO, 'day').format('DD/MM/YYYY ddd');
 	
 	var noteBody = getTemplate({
 		memories: memories,
 		nowNote: nowNote,
-		mappiness: mappiness,
+		reporter: reporter,
 		storyline: storyline,
 		fitbit: fitbit,
 		photos: photos

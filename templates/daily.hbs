@@ -21,7 +21,7 @@
 			<thead>
 				<tr>
 					<td style="padding: 5px 10px; background: #3A71B0; color: #fff;">Todos</td>
-					<td style="padding: 5px 10px; background: #3A71B0; color: #fff;">Mappiness</td>
+					<td style="padding: 5px 10px; background: #3A71B0; color: #fff;">Reporter</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -30,7 +30,7 @@
 						{{#if nowNote}}{{{nowNote.content}}}{{/if}}
 					</td>
 					<td style="padding: 10px; background: #fff; border-left: 1px #3A71B0 solid;">
-						{{#each mappiness}}<div><strong>{{name}}</strong> {{value}}</div>{{/each}}
+						{{#each reporter}}<div><strong>{{name}}</strong> {{value}}</div>{{/each}}
 						{{#if nowNote}}<div><strong>Productivity</strong> {{nowNote.productivity}}</div>{{/if}}
 					</td>
 				</tr>
@@ -114,7 +114,6 @@
 							<li><strong>Floors:</strong> {{fitbit.activities.floors}}</li>
 							<li><strong>Resting HR:</strong> {{fitbit.heart.restingHeartRate}}</li>
 						</ul>
-						<div><strong>Farts:</strong> 15</div>
 					</td>
 					<td style="padding: 10px; background: #fff; border-left: 1px #8B572A solid;">
 						{{#if storyline.mapURL}}
