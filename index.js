@@ -2,13 +2,13 @@ var Handlebars = require('handlebars');
 var moment = require('moment-timezone');
 var fs = require('fs');
 var Q = require('q');
-// var config = require('./config');
-// var getStoryline = require('./modules/moves').getStoryline;
-// var getPhotos = require('./modules/flickr').getPhotos;
-// var getFitbitData = require('./modules/fitbit').getFitbitData;
-// var getMemories = require('./modules/evernote').getMemories;
-// var getNowNote = require('./modules/evernote').getNowNote;
-// var createNote = require('./modules/evernote').createNote;
+var config = require('./config');
+var getStoryline = require('./modules/moves').getStoryline;
+var getPhotos = require('./modules/flickr').getPhotos;
+var getFitbitData = require('./modules/fitbit').getFitbitData;
+var getMemories = require('./modules/evernote').getMemories;
+var getNowNote = require('./modules/evernote').getNowNote;
+var createNote = require('./modules/evernote').createNote;
 var getReporter = require('./modules/reporter').getReporter;
 
 // Handlebars
