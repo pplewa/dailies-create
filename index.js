@@ -12,9 +12,11 @@ var createNote = require('./modules/evernote').createNote;
 var getReporter = require('./modules/reporter').getReporter;
 
 if (config.NO_PHOTOS) {
-	getPhotos = Q.fcall(function () { 
-		return []; 
-	});
+	getPhotos = function () {
+		var deferred = Q.defer();
+		deferred.resolve([]);
+		return deferred.promise;
+	}
 }
 
 // Handlebars
