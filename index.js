@@ -11,6 +11,12 @@ var getNowNote = require('./modules/evernote').getNowNote;
 var createNote = require('./modules/evernote').createNote;
 var getReporter = require('./modules/reporter').getReporter;
 
+if (config.NO_PHOTOS) {
+	getPhotos = Q.fcall(function () { 
+		return []; 
+	});
+}
+
 // Handlebars
 Handlebars.registerHelper('mins', function(value) {
 	return Math.round(value / 60);
