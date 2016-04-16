@@ -89,9 +89,11 @@ exports.getMemories = function() {
 
 	var deferred = Q.defer();
 	var filter = new Evernote.NoteFilter({
-		words: interpolate('notebook:journal any: intitle:{dateFormat1} intitle:{dateFormat2}*', {
+		words: interpolate('notebook:journal any: intitle:{dateFormat1} intitle:{dateFormat2}*  intitle:{dateFormat3}  intitle:{dateFormat4}*', {
 			dateFormat1: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('DD/MM/'),
-			dateFormat2: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('DDMM')
+			dateFormat2: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('DDMM'),
+			dateFormat3: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('DD/MM/'),
+			dateFormat4: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('DDMM')
 		}),
 		order: Evernote.NoteSortOrder.CREATED,
 		ascending: false
@@ -104,7 +106,7 @@ exports.getMemories = function() {
 	var noteSpec = new Evernote.NotesMetadataResultSpec({
 		includeTitle: true
 	})
-	noteStore.findNotesMetadata(filter, 0, 10, noteSpec, function(error, data){
+	noteStore.findNotesMetadata(filter, 0, 20, noteSpec, function(error, data){
 		if (error) {
 			deferred.reject(new Error(error));
 		} else {
@@ -120,7 +122,7 @@ exports.getMemories = function() {
 					title: note.title
 				});
 			});
-			noteStore.findNotesMetadata(foodFilter, 0, 10, noteSpec, function(error, data){
+			noteStore.findNotesMetadata(foodFilter, 0, 20, noteSpec, function(error, data){
 				data.notes.forEach(function(note){
 					memories.push({
 						link: interpolate(noteUrl, {
