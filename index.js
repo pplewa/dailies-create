@@ -34,8 +34,9 @@ Handlebars.registerHelper('upperCase', function(value) {
 		return letter.toUpperCase();
 	}).replace('_', ' ');
 });
-Handlebars.registerHelper('inTimeRange', function(timeStart, timeEnd, timeTest) {
-	return moment(timeTest).isBetween(moment(timeStart, 'HH:mm'), moment(timeEnd, 'HH:mm'));
+Handlebars.registerHelper('inTimeRange', function(timeStart, timeEnd, test) {
+	var timeTest = moment(moment(timeTest).format('HH:mm'), 'HH:mm')
+	return timeTest.isBetween(moment(timeStart, 'HH:mm'), moment(timeEnd, 'HH:mm'));
 });
 var template = fs.readFileSync('templates/daily.hbs', { encoding: 'utf-8' });
 var getTemplate = Handlebars.compile(template);
