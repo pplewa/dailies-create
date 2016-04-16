@@ -127,7 +127,7 @@ exports.getMemories = function() {
 			noteStore.findNotesMetadata(foodFilter, 0, 20, noteSpec, function(error, data){
 				data.notes.forEach(function(note){
 					memories.push({
-						type: 'food',
+						food: true,
 						link: interpolate(noteUrl, {
 							shardId: process.env.EVERNOTE_SHARD_ID,
 							userId: process.env.EVERNOTE_USER_ID,
