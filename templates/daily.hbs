@@ -67,7 +67,7 @@
 						<ul>
 							{{#if @first}}<li>wake up @{{../../fitbit.sleep.wakeUp}}</li>{{/if}}
 							{{#each ../memories}}
-								{{#if (inTimeRange start ../end created)}}
+								{{#if (inTimeRange ../start ../end created)}}
 									<li><a href="{{link}}">{{title}}</a></li>
 								{{/if}}
 							{{/each}}
