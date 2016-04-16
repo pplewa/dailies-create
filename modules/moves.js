@@ -34,7 +34,7 @@ function mergeDuplicateMoves(segments) {
 		)) {
 			var activities = (lastSeg.activities || []).concat(cloneSeg.activities || []);
 			lastSeg.activities = activities.reduce(function(arrAct, currentAct){
-				var lastAct = arrAct.slice(-1, arrAct.length)[0];
+				var lastAct = arrAct[arrAct.length-1];
 				if (lastAct && lastAct.activity === currentAct.activity) {
 					if (lastAct.calories) {
 						lastAct.calories += currentAct.calories;
@@ -54,6 +54,24 @@ function mergeDuplicateMoves(segments) {
 			lastSeg.endTime = cloneSeg.endTime;
 			return arrSeg;
 		} else {
+			cloneSeg.activities = (cloneSeg.activities || []).reduce(function(arrAct, currentAct){
+				var lastAct = arrAct[arrAct.length-1];
+				if (lastAct && lastAct.activity === currentAct.activity) {
+					if (lastAct.calories) {
+						lastAct.calories += currentAct.calories;
+					}
+					if (lastAct.steps) {
+						lastAct.steps += currentAct.steps;
+					}
+					lastAct.distance += currentAct.distance;
+					lastAct.duration += currentAct.duration;
+					lastAct.endTime = currentAct.endTime;
+					lastAct.trackPoints = (lastAct.trackPoints || []).concat(currentAct.trackPoints || []);
+					return arrAct;
+				} else {
+					return arrAct.concat(currentAct);
+				}
+			}, []);
 			return arrSeg.concat(cloneSeg);
 		}
 	}, []);
