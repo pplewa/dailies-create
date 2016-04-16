@@ -8,6 +8,68 @@ var config = require('../config');
 
 var moves = new MovesApi({ accessToken: process.env.MOVES_TOKEN });
 
+function removeOffPeriods(segments) {
+	return segments.reduce(function(arrSeg, currentSeg){ 
+		var cloneSeg = JSON.parse(JSON.stringify(currentSeg));
+		if (cloneSeg.type === 'off') {
+			if (cloneSeg.activities) {
+				cloneSeg.type = 'move';
+				return arrSeg.concat(cloneSeg);
+			} else {
+				return arrSeg;
+			}
+		} else {
+			return arrSeg.concat(cloneSeg)
+		}
+	}, []);
+}
+
+function mergeDuplicatePlaces(segments) {
+	return segments.reduce(function(arrSeg, currentSeg){ 
+		var cloneSeg = JSON.parse(JSON.stringify(currentSeg));
+		var lastSeg = arrSeg[arrSeg.length-1];
+		if (lastSeg && lastSeg.type === 'place' && cloneSeg.type === 'place' && lastSeg.place.id === cloneSeg.place.id) {
+			lastSeg.endTime = cloneSeg.endTime;
+			lastSeg.activities = lastSeg.activities.concat(cloneSeg.activities);
+			return arrSeg;
+		} else {
+			return arrSeg.concat(cloneSeg)
+		}
+	}, []);
+}
+
+function mergeDuplicateMoves(segments) {
+	return segments.reduce(function(arrSeg, currentSeg){ 
+		var cloneSeg = JSON.parse(JSON.stringify(currentSeg));
+		var lastSeg = arrSeg[arrSeg.length-1];
+		if (lastSeg && lastSeg.type === 'move' && cloneSeg.type === 'move') {
+			var activities = lastSeg.activities.concat(cloneSeg.activities);
+			lastSeg.activities = activities.reduce(function(arrAct, currentAct){
+				var lastAct = arrAct.slice(-1, arrAct.length)[0];
+				if (lastAct && lastAct.activity === currentAct.activity) {
+					if (lastAct.calories) {
+						lastAct.calories += currentAct.calories;
+					}
+					if (lastAct.steps) {
+						lastAct.steps += currentAct.steps;
+					}
+					lastAct.distance += currentAct.distance;
+					lastAct.duration += currentAct.duration;
+					lastAct.endTime = currentAct.endTime;
+					lastAct.trackPoints = lastAct.trackPoints.concat(currentAct.trackPoints);
+					return arrAct;
+				} else {
+					return arrAct.concat(currentAct);
+				}
+			}, []);
+			lastSeg.endTime = cloneSeg.endTime;
+			return arrSeg;
+		} else {
+			return arrSeg.concat(cloneSeg);
+		}
+	}, []);
+}
+
 exports.getStoryline = function() {
 	console.log('getStoryline');
 
@@ -26,7 +88,8 @@ exports.getStoryline = function() {
 			segments: []
 		};
 
-		storylines[0].segments.forEach(function(segment, i){
+		var cleanSegments = mergeDuplicateMoves(mergeDuplicatePlaces(removeOffPeriods(storylines[0].segments)));
+		cleanSegments.forEach(function(segment, i){
 			if (segment.place) {
 				var temp = {
 					start: moment(segment.startTime, 'YYYYMMDDTHms').format('HH:mm'),
@@ -47,7 +110,7 @@ exports.getStoryline = function() {
 					}
 				}
 				if (i === 0) temp.start = '00:00';
-				if (i === storylines[0].segments.length - 1) temp.end = '00:00';
+				if (i === cleanSegments.length - 1) temp.end = '00:00';
 				temp.place = {
 					name: segment.place.name,
 					lon: segment.place.location.lon,
