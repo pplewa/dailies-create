@@ -35,8 +35,8 @@ Handlebars.registerHelper('upperCase', function(value) {
 	}).replace('_', ' ');
 });
 Handlebars.registerHelper('inTimeRange', function(timeStart, timeEnd, test) {
-	var timeTest = moment(moment(timeTest).tz(config.TIMEZONE).format('HH:mm'), 'HH:mm');
-	console.log(timeTest.format('HH:mm'));
+	var timeTest = moment(moment(test).tz(config.TIMEZONE).format('HH:mm'), 'HH:mm');
+	// console.log(timeTest.format('HH:mm'));
 	return timeTest.isBetween(moment(timeStart, 'HH:mm'), moment(timeEnd, 'HH:mm'));
 });
 var template = fs.readFileSync('templates/daily.hbs', { encoding: 'utf-8' });
