@@ -27,7 +27,8 @@
 		}).replace('_', ' ');
 	});
 	Handlebars.registerHelper('inTimeRange', function(timeStart, timeEnd, timeTest) {
-		var timeTest = moment(moment(timeTest).format('HH:mm'), 'HH:mm')
+		var timeTest = moment(moment(timeTest).format('HH:mm'), 'HH:mm');
+		console.log(timeTest.format('HH:mm'));
 		return timeTest.isBetween(moment(timeStart, 'HH:mm'), moment(timeEnd, 'HH:mm'));
 	});
 
