@@ -34,7 +34,8 @@ exports.getReporter = function() {
 
 		request({ url: reportUrl, json: true }, function (error2, response2, data2) {
 			if (error2) {
-				return deferred.reject(error2);
+				// return deferred.reject(error2);
+				deferred.resolve([]);
 			}
 
 			var responses = JSONSelect.match('.snapshots .responses', data2).length;
@@ -42,6 +43,9 @@ exports.getReporter = function() {
 			var happy = JSONSelect.match('.snapshots .responses .questionPrompt:val("How happy are you? 1-10") ~ .numericResponse', data2);
 			var relaxed = JSONSelect.match('.snapshots .responses .questionPrompt:val("How relaxed are you? 1-10") ~ .numericResponse', data2);
 			var farts = JSONSelect.match('.snapshots .responses .questionPrompt:val("How many farts?") ~ .numericResponse', data2)[0];
+			var drinks = JSONSelect.match('.snapshots .responses .questionPrompt:val("How many drinks?") ~ .numericResponse', data2)[0];
+			var drinks = JSONSelect.match('.snapshots .responses .questionPrompt:val("How many times did I freak out?") ~ .numericResponse', data2)[0];
+			var sex = JSONSelect.match('.snapshots .responses .questionPrompt:val("Did I have sex today?") ~ .answeredOptions string', data2)[0];
 			var eatSlow = JSONSelect.match('.snapshots .responses .questionPrompt:val("Did I eat slow today?") ~ .answeredOptions string', data2)[0];
 			var pomodoros = JSONSelect.match('.snapshots .responses .questionPrompt:val("How many pomodoros did you do today?") ~ .numericResponse', data2)[0];
 
@@ -51,10 +55,16 @@ exports.getReporter = function() {
 			deferred.resolve([
 				{ name: 'Logs', 'value': responses },
 				{ name: 'Sleep', 'value': sleep || '' },
+				{ name: 'Sex', 'value': sex || 'No' },
+				{ name: 'Eat Slow', 'value': eatSlow || 'No' },
+				{ name: 'Farts', 'value': farts || 15 },
+				{ name: 'Drinks', 'value': drinks || 0},
+				{ name: 'Freak Out', 'value': freak || 0 },
+				// { name: 'Success', 'value': freak || 0 },
+				// { name: 'Failure', 'value': freak || 0 },
+				// { name: 'Highlight', 'value': freak || 0 },
 				{ name: 'Happy', 'value': getVal(h, happy.length) + ' ' + getFace(getVal(h, happy.length)) },
 				{ name: 'Relax', 'value': getVal(r, happy.length) + ' ' + getFace(getVal(r, happy.length)) },
-				{ name: 'Farts', 'value': farts || 15 },
-				{ name: 'Eat Slow', 'value': eatSlow },
 				{ name: 'Pomodoros', 'value': pomodoros || 0 }
 			]);
 		});
