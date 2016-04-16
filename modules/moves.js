@@ -102,7 +102,7 @@ exports.getStoryline = function() {
 					start: moment(segment.startTime, 'YYYYMMDDTHms').format('HH:mm'),
 					end: moment(segment.endTime, 'YYYYMMDDTHms').format('HH:mm')
 				};
-				if (segment.activities) {
+				if (segment.activities && segment.activities[0]) {
 					temp.activity = segment.activities[0].activity;
 					if (segment.activities.length === 1) {
 						temp.duration = segment.activities[0].duration;
