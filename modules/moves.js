@@ -24,28 +24,15 @@ function removeOffPeriods(segments) {
 	}, []);
 }
 
-function mergeDuplicatePlaces(segments) {
-	return segments.reduce(function(arrSeg, currentSeg){ 
-		var cloneSeg = JSON.parse(JSON.stringify(currentSeg));
-		var lastSeg = arrSeg[arrSeg.length-1];
-		if (lastSeg && lastSeg.type === 'place' && cloneSeg.type === 'place' && lastSeg.place.id === cloneSeg.place.id) {
-			lastSeg.endTime = cloneSeg.endTime;
-			if (lastSeg.activities) {
-				lastSeg.activities = lastSeg.activities.concat(cloneSeg.activities);
-			}
-			return arrSeg;
-		} else {
-			return arrSeg.concat(cloneSeg)
-		}
-	}, []);
-}
-
 function mergeDuplicateMoves(segments) {
 	return segments.reduce(function(arrSeg, currentSeg){ 
 		var cloneSeg = JSON.parse(JSON.stringify(currentSeg));
 		var lastSeg = arrSeg[arrSeg.length-1];
-		if (lastSeg && lastSeg.type === 'move' && cloneSeg.type === 'move') {
-			var activities = lastSeg.activities.concat(cloneSeg.activities);
+		if (lastSeg && (
+			(lastSeg.type === 'move' && cloneSeg.type === 'move') ||
+			(lastSeg.type === 'place' && cloneSeg.type === 'place' && lastSeg.place.id === cloneSeg.place.id)
+		)) {
+			var activities = (lastSeg.activities || []).concat(cloneSeg.activities || []);
 			lastSeg.activities = activities.reduce(function(arrAct, currentAct){
 				var lastAct = arrAct.slice(-1, arrAct.length)[0];
 				if (lastAct && lastAct.activity === currentAct.activity) {
@@ -58,7 +45,7 @@ function mergeDuplicateMoves(segments) {
 					lastAct.distance += currentAct.distance;
 					lastAct.duration += currentAct.duration;
 					lastAct.endTime = currentAct.endTime;
-					lastAct.trackPoints = lastAct.trackPoints.concat(currentAct.trackPoints);
+					lastAct.trackPoints = (lastAct.trackPoints || []).concat(currentAct.trackPoints || []);
 					return arrAct;
 				} else {
 					return arrAct.concat(currentAct);
@@ -90,7 +77,7 @@ exports.getStoryline = function() {
 			segments: []
 		};
 
-		var cleanSegments = mergeDuplicateMoves(mergeDuplicatePlaces(removeOffPeriods(storylines[0].segments)));
+		var cleanSegments = mergeDuplicateMoves(removeOffPeriods(storylines[0].segments));
 		cleanSegments.forEach(function(segment, i){
 			if (segment.place) {
 				var temp = {
