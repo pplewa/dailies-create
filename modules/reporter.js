@@ -59,13 +59,13 @@ exports.getReporter = function() {
 				{ name: 'Eat Slow', 'value': eatSlow || 'No' },
 				{ name: 'Farts', 'value': farts || 15 },
 				{ name: 'Drinks', 'value': drinks || 0},
-				{ name: 'Freak Out', 'value': freak || 0 },
+				{ name: 'Freak Outs', 'value': freak || 0 },
+				{ name: 'Pomodoros', 'value': pomodoros || 0 },
 				// { name: 'Success', 'value': freak || 0 },
 				// { name: 'Failure', 'value': freak || 0 },
-				// { name: 'Highlight', 'value': freak || 0 },
+				// { name: 'Highlights', 'value': freak || 0 },
 				{ name: 'Happy', 'value': getVal(h, happy.length) + ' ' + getFace(getVal(h, happy.length)) },
 				{ name: 'Relax', 'value': getVal(r, happy.length) + ' ' + getFace(getVal(r, happy.length)) },
-				{ name: 'Pomodoros', 'value': pomodoros || 0 }
 			]);
 		});
 
