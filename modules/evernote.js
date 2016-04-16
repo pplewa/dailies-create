@@ -104,7 +104,8 @@ exports.getMemories = function() {
 		ascending: false
 	});
 	var noteSpec = new Evernote.NotesMetadataResultSpec({
-		includeTitle: true
+		includeTitle: true,
+		includeCreated: true
 	})
 	noteStore.findNotesMetadata(filter, 0, 20, noteSpec, function(error, data){
 		if (error) {
@@ -119,17 +120,20 @@ exports.getMemories = function() {
 						userId: process.env.EVERNOTE_USER_ID,
 						noteGuid: note.guid
 					}),
+					created: note.created,
 					title: note.title
 				});
 			});
 			noteStore.findNotesMetadata(foodFilter, 0, 20, noteSpec, function(error, data){
 				data.notes.forEach(function(note){
 					memories.push({
+						type: 'food',
 						link: interpolate(noteUrl, {
 							shardId: process.env.EVERNOTE_SHARD_ID,
 							userId: process.env.EVERNOTE_USER_ID,
 							noteGuid: note.guid
 						}),
+						created: note.created,
 						title: note.title
 					});
 				});
