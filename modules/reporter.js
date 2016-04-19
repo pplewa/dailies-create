@@ -4,7 +4,6 @@ var Q = require('q');
 var JSONSelect = require('JSONSelect');
 var config = require('../config');
 
-
 function getVal(val, logs) {
 	if (!logs) {
 		return 0;
@@ -49,24 +48,47 @@ exports.getReporter = function() {
 			var eatSlow = JSONSelect.match('.snapshots .responses .questionPrompt:val("Did I eat slow today?") ~ .answeredOptions string', data2)[0];
 			var pomodoros = JSONSelect.match('.snapshots .responses .questionPrompt:val("How many pomodoros did you do today?") ~ .numericResponse', data2)[0];
 
+			var success = JSONSelect.match('.snapshots .responses .questionPrompt:val("Today\'s Success") ~ .textResponses', data2)[0];
+			var failure = JSONSelect.match('.snapshots .responses .questionPrompt:val("Today\'s Failure") ~ .textResponses', data2)[0];
+			var highlights = JSONSelect.match('.snapshots .responses .questionPrompt:val("Today\'s Highlights") ~ .tokens', data2)[0];
+
 			var h = happy.map(Number).reduce(function(a,b){ return a + b }, 0);
 			var r = relaxed.map(Number).reduce(function(a,b){ return a + b }, 0);
 
-			deferred.resolve([
+			var reporterData = [
 				{ name: 'Logs', 'value': responses },
 				{ name: 'Sleep', 'value': sleep || '' },
 				{ name: 'Sex', 'value': sex || 'No' },
 				{ name: 'Eat Slow', 'value': eatSlow || 'No' },
 				{ name: 'Farts', 'value': farts || 15 },
-				{ name: 'Drinks', 'value': drinks || 0},
+				{ name: 'Drinks', 'value': drinks || 1 },
 				{ name: 'Freak Outs', 'value': freak || 0 },
-				{ name: 'Pomodoros', 'value': pomodoros || 0 },
-				// { name: 'Success', 'value': freak || 0 },
-				// { name: 'Failure', 'value': freak || 0 },
-				// { name: 'Highlights', 'value': freak || 0 },
+				{ name: 'Pomodoros', 'value': pomodoros || 0 }
+			];
+
+			if (success && success[0] && success[0].text) {
+				reporterData.push({ name: 'Success', 'value': success[0].text });
+			}
+
+			if (failure && failure[0] && failure[0].text) {
+				reporterData.push({ name: 'Failure', 'value': failure[0].text });
+			}
+
+			if (highlights && highlights.length) {
+				reporterData.push({ 
+					name: 'Highlights', 
+					value: highlights.reduce(function(str, curr){ 
+						return str + curr.text + ', ' 
+					}, '') 
+				});
+			}
+
+			reporterData.push(
 				{ name: 'Happy', 'value': getVal(h, happy.length) + ' ' + getFace(getVal(h, happy.length)) },
-				{ name: 'Relax', 'value': getVal(r, happy.length) + ' ' + getFace(getVal(r, happy.length)) },
-			]);
+				{ name: 'Relax', 'value': getVal(r, happy.length) + ' ' + getFace(getVal(r, happy.length)) }
+			);
+
+			deferred.resolve(reporterData);
 		});
 
 	});
