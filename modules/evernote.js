@@ -97,11 +97,13 @@ exports.getMemories = function() {
 		ascending: false
 	});
 
+	var foodWords = interpolate('notebook:food created:{dateFormat1} -created:{dateFormat2}', {
+		dateFormat1: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('YYYYMMDD'),
+		dateFormat2: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
+	});
+	console.log(foodWords);
 	var foodFilter = new Evernote.NoteFilter({
-		words: interpolate('notebook:food created:{dateFormat1} -created:{dateFormat2}', {
-			dateFormat1: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('YYYYMMDD'),
-			dateFormat2: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
-		}),
+		words: foodWords,
 		order: Evernote.NoteSortOrder.CREATED,
 		ascending: false
 	});
