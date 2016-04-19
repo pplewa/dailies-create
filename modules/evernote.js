@@ -89,9 +89,10 @@ exports.getMemories = function() {
 
 	var deferred = Q.defer();
 	var filter = new Evernote.NoteFilter({
-		words: interpolate('notebook:journal any: intitle:{dateFormat1} intitle:{dateFormat2}*  intitle:{dateFormat3}  intitle:{dateFormat4}*', {
-			dateFormat1: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('DD/MM/'),
-			dateFormat2: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('DDMM'),
+		words: interpolate('notebook:journal any: intitle:{dateFormat3} intitle:{dateFormat4}*', {
+		// words: interpolate('notebook:journal any: intitle:{dateFormat1} intitle:{dateFormat2}*  intitle:{dateFormat3}  intitle:{dateFormat4}*', {
+			// dateFormat1: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('DD/MM/'),
+			// dateFormat2: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('DDMM'),
 			dateFormat3: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('DD/MM/'),
 			dateFormat4: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('DDMM')
 		}),
