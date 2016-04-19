@@ -104,7 +104,7 @@ exports.getMemories = function() {
 			dateFormat2: moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYYMMDD')
 		}),
 		order: Evernote.NoteSortOrder.CREATED,
-		ascending: false,
+		ascending: true,
 		timeZone: config.TIMEZONE
 	});
 	var noteSpec = new Evernote.NotesMetadataResultSpec({
