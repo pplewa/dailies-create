@@ -50,6 +50,7 @@ exports.getReporter = function() {
 
 			var success = JSONSelect.match('.snapshots .responses .questionPrompt:val("Today\'s Success") ~ .textResponses', data2)[0];
 			var failure = JSONSelect.match('.snapshots .responses .questionPrompt:val("Today\'s Failure") ~ .textResponses', data2)[0];
+			var surprise = JSONSelect.match('.snapshots .responses .questionPrompt:val("Today\'s Surprise") ~ .textResponses', data2)[0];
 			var highlights = JSONSelect.match('.snapshots .responses .questionPrompt:val("Today\'s Highlights") ~ .tokens', data2)[0];
 
 			var h = happy.map(Number).reduce(function(a,b){ return a + b }, 0);
@@ -72,6 +73,10 @@ exports.getReporter = function() {
 
 			if (failure && failure[0] && failure[0].text) {
 				reporterData.push({ name: 'Failure', 'value': failure[0].text });
+			}
+
+			if (surprise && surprise[0] && surprise[0].text) {
+				reporterData.push({ name: 'Surprise', 'value': surprise[0].text });
 			}
 
 			if (highlights && highlights.length) {
