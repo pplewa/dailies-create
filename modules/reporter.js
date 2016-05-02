@@ -30,10 +30,8 @@ exports.getReporter = function() {
 		var day = moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYY-MM-DD');
 
 		data = data.snapshots.filter(function(snapshot){ 
-			return snapshot.date.startsWith(day);
+			return snapshot.date && snapshot.date.indexOf(day) === 0;
 		});
-		console.log(day);
-		console.log(data);
 
 		var responses = JSONSelect.match('.responses', data).length;
 		var sleep = JSONSelect.match('.responses .questionPrompt:val("How did you sleep?") ~ .answeredOptions string', data)[0];
