@@ -50,7 +50,7 @@ exports.getReporter = function() {
 
 		// evening
 		var success = JSONSelect.match('.responses .questionPrompt:val("Today\'s Successes") ~ .textResponses', data)[0];
-		var failure = JSONSelect.match('.responses .questionPrompt:val("Today\'s Failurees") ~ .textResponses', data)[0];
+		var failure = JSONSelect.match('.responses .questionPrompt:val("Today\'s Failures") ~ .textResponses', data)[0];
 		var surprise = JSONSelect.match('.responses .questionPrompt:val("Today\'s Surprises") ~ .textResponses', data)[0];
 		var lessons = JSONSelect.match('.responses .questionPrompt:val("Today\'s Lessons") ~ .textResponses', data)[0];
 		var highlights = JSONSelect.match('.responses .questionPrompt:val("Today\'s Highlights") ~ .tokens', data)[0];
