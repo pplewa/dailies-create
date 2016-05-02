@@ -27,7 +27,7 @@ exports.getReporter = function() {
 			return deferred.reject(error);
 		}
 
-		var day = moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO - 1, 'day').format('YYYY-MM-DD');
+		var day = moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('YYYY-MM-DD');
 
 		data = data.snapshots.filter(function(snapshot){ 
 			return snapshot.date && snapshot.date.indexOf(day) === 0;
