@@ -8,7 +8,7 @@ var config = require('../config');
 var evernote = new Evernote.Client({ token: process.env.EVERNOTE_TOKEN, sandbox: false });
 var noteStore = evernote.getNoteStore();
 
-exports.createNote = function(noteTitle, noteBody, tags, created) {
+exports.createNote = function(noteTitle, noteBody, tags, created, notebookName) {
 	var deferred = Q.defer();
 
 	html2enml('<body>' + noteBody + '</body>', '', function(enml, res){
@@ -20,18 +20,50 @@ exports.createNote = function(noteTitle, noteBody, tags, created) {
 			resources: res
 		});
 
-		// Attempt to create note in Evernote account
-		noteStore.createNote(ourNote, function(error, note) {
-			if (error) {
-				console.log(arguments);
-				deferred.reject(new Error(error));
-				// Something was wrong with the note data
-				// See EDAMErrorCode enumeration for error code explanation
-				// http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
-			} else {
-				deferred.resolve(note);
-			}
-		});
+		if (notebookName) {
+			noteStore.listNotebooks(function(err, notebooks) {
+				if (err) {
+					return deferred.reject(new Error(err));
+				}
+				var notebookGuid = null;
+				notebooks.some(function(notebook){
+					if (notebook.name.toLowerCase() === notebookName.toLowerCase()) {
+						notebookGuid = notebook.guid;
+						return true;
+					}
+				});
+				if (notebookGuid) {
+					ourNote.notebookGuid = notebookGuid;
+				}
+				noteStore.createNote(ourNote, function(error, note) {
+					if (error) {
+						return deferred.reject(new Error(error));
+					} 
+					var noteUrl = 'evernote:///view/{userId}/{shardId}/{noteGuid}/{noteGuid}/';
+					deferred.resolve({
+						title: noteTitle,
+						link: interpolate(noteUrl, {
+							shardId: process.env.EVERNOTE_SHARD_ID,
+							userId: process.env.EVERNOTE_USER_ID,
+							noteGuid: note.guid
+						})
+					});
+				});
+			});
+		} else {
+			// Attempt to create note in Evernote account
+			noteStore.createNote(ourNote, function(error, note) {
+				if (error) {
+					console.log(arguments);
+					deferred.reject(new Error(error));
+					// Something was wrong with the note data
+					// See EDAMErrorCode enumeration for error code explanation
+					// http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode
+				} else {
+					deferred.resolve(note);
+				}
+			});
+		}
 	});
 	return deferred.promise;
 }
