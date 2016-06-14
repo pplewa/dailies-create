@@ -34,7 +34,7 @@ exports.getLongevityNote = function() {
 		var todo = cards.filter(function(list) { return list.name === 'To Do'; })[0];
 		var inProgress = cards.filter(function(list) { return list.name === 'In progress'; })[0];
 		var maintenance = cards.filter(function(list) { return list.name === 'Maintenance'; })[0];
-		var ratio = (maintenance.cards.length + (0.8 * inProgress.cards.length) + (0.1 * todo.cards.length)) /
+		var ratio = (maintenance.cards.length + (0.5 * inProgress.cards.length) + (0.1 * todo.cards.length)) /
 			(maintenance.cards.length + inProgress.cards.length + todo.cards.length);
 		var roundedRatio = Math.round(ratio * 100) / 100;
 
