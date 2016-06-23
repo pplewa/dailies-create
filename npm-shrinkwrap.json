@@ -8,9 +8,9 @@
       "resolved": "https://registry.npmjs.org/JSONSelect/-/JSONSelect-0.4.0.tgz"
     },
     "dailies-map": {
-      "version": "0.0.3",
-      "from": "git+https://github.com/pplewa/dailies-map.git",
-      "resolved": "git+https://github.com/pplewa/dailies-map.git#7b71bb6524d63848f78f57e44f5923c4a231e06f",
+      "version": "0.0.4",
+      "from": "dailies-map@0.0.4",
+      "resolved": "https://registry.npmjs.org/dailies-map/-/dailies-map-0.0.4.tgz",
       "dependencies": {
         "express": {
           "version": "4.13.3",
@@ -666,9 +666,9 @@
           "resolved": "https://registry.npmjs.org/promise/-/promise-7.1.1.tgz",
           "dependencies": {
             "asap": {
-              "version": "2.0.3",
+              "version": "2.0.4",
               "from": "asap@>=2.0.3 <2.1.0",
-              "resolved": "https://registry.npmjs.org/asap/-/asap-2.0.3.tgz"
+              "resolved": "https://registry.npmjs.org/asap/-/asap-2.0.4.tgz"
             }
           }
         },
