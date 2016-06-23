@@ -23,7 +23,7 @@
   "homepage": "https://github.com/pplewa/dailies-create#readme",
   "dependencies": {
     "JSONSelect": "^0.4.0",
-    "dailies-map": "0.0.4",
+    "dailies-map": "0.0.5",
     "evernote": "git+https://github.com/pplewa/evernote-sdk-js.git",
     "fitbit-client-oauth2": "git+https://github.com/pplewa/fitbit-client-oauth2.git",
     "flickrapi": "^0.3.36",

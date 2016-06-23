@@ -8,9 +8,9 @@
       "resolved": "https://registry.npmjs.org/JSONSelect/-/JSONSelect-0.4.0.tgz"
     },
     "dailies-map": {
-      "version": "0.0.4",
-      "from": "dailies-map@0.0.4",
-      "resolved": "https://registry.npmjs.org/dailies-map/-/dailies-map-0.0.4.tgz",
+      "version": "0.0.5",
+      "from": "dailies-map@0.0.5",
+      "resolved": "https://registry.npmjs.org/dailies-map/-/dailies-map-0.0.5.tgz",
       "dependencies": {
         "express": {
           "version": "4.13.3",
