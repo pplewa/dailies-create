@@ -786,9 +786,9 @@
       }
     },
     "flickrapi": {
-      "version": "0.4.2",
-      "from": "msmichellegar/node-flickrapi",
-      "resolved": "git://github.com/msmichellegar/node-flickrapi.git#4b6f251817f9ac7b47bb5e239949cbb8690cc36e",
+      "version": "0.5.0",
+      "from": "flickrapi@latest",
+      "resolved": "https://registry.npmjs.org/flickrapi/-/flickrapi-0.5.0.tgz",
       "dependencies": {
         "async": {
           "version": "0.2.10",

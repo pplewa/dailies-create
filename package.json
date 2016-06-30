@@ -26,7 +26,7 @@
     "dailies-map": "0.0.5",
     "evernote": "git+https://github.com/pplewa/evernote-sdk-js.git",
     "fitbit-client-oauth2": "git+https://github.com/pplewa/fitbit-client-oauth2.git",
-    "flickrapi": "msmichellegar/node-flickrapi",
+    "flickrapi": "^0.5.0",
     "handlebars": "^2.0.0",
     "html2enml2": "git+https://github.com/pplewa/node-html2enml.git",
     "interpolate": "^0.1.0",
