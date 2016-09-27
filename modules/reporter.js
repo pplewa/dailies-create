@@ -50,10 +50,10 @@ exports.getReporter = function() {
 
 		var day = moment().tz(config.TIMEZONE).subtract(config.DAYS_AGO, 'day').format('YYYY-MM-DD');
 		var dayBefore = moment().tz(config.TIMEZONE).subtract(Number(config.DAYS_AGO) + 1, 'day').format('YYYY-MM-DD');
-		var reportUrl = data.match(/href="([^\'\"]+)/g).filter(function(link){
+		var reportUrl = data.match(/https:\/\/www.dropbox.com\/sh\/([^\'\"]+)/g).filter(function(link){
 			return link.indexOf(day + '-reporter-export.json') !== -1
 		})[0].replace('href="', '').replace('?dl=0', '?raw=1');
-		var reportDayBeforeUrl = data.match(/href="([^\'\"]+)/g).filter(function(link){
+		var reportDayBeforeUrl = data.match(/https:\/\/www.dropbox.com\/sh\/([^\'\"]+)/g).filter(function(link){
 			return link.indexOf(dayBefore + '-reporter-export.json') !== -1
 		})[0].replace('href="', '').replace('?dl=0', '?raw=1');
 
